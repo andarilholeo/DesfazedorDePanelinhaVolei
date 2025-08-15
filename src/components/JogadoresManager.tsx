@@ -83,7 +83,6 @@ export default function JogadoresManager({
 
   return (
     <div className="space-y-6">
-      {/* Estatísticas */}
       <div className="grid grid-cols-2 md:grid-cols-4 gap-4">
         <div className="bg-white rounded-lg p-4 shadow-sm border border-primary-cream">
           <div className="text-2xl font-bold text-primary-orange">{estatisticas.total}</div>
@@ -132,7 +131,6 @@ export default function JogadoresManager({
         )}
       </div>
 
-      {/* Formulário */}
       {showForm && (
         <div className="bg-white rounded-lg p-6 shadow-lg border border-primary-cream">
           <h3 className="text-lg font-semibold text-primary-dark mb-4">
@@ -201,7 +199,6 @@ export default function JogadoresManager({
         </div>
       )}
 
-      {/* Lista de Jogadores */}
       <div className="bg-white rounded-lg shadow-lg border border-primary-cream">
         <div className="p-4 border-b border-primary-cream">
           <h3 className="text-lg font-semibold text-primary-dark">
@@ -266,7 +263,6 @@ export default function JogadoresManager({
         </div>
       </div>
 
-      {/* Modal Adicionar Por Lista */}
       <AdicionarPorLista
         isOpen={showListModal}
         onClose={() => setShowListModal(false)}
