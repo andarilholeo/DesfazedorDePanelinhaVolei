@@ -106,13 +106,19 @@ export default function JogadoresManager({
       <div className="flex flex-wrap gap-3">
         <button
           onClick={() => setShowForm(true)}
-          className="bg-primary-orange hover:bg-primary-light text-white px-4 py-2 rounded-lg font-medium transition-colors"
+          className="text-white px-4 py-2 rounded-lg font-medium transition-colors"
+          style={{ backgroundColor: '#ef863d' }}
+          onMouseEnter={(e) => e.currentTarget.style.backgroundColor = '#f49030'}
+          onMouseLeave={(e) => e.currentTarget.style.backgroundColor = '#ef863d'}
         >
           + Adicionar Jogador
         </button>
         <button
           onClick={() => setShowListModal(true)}
-          className="bg-blue-600 hover:bg-blue-700 text-white px-4 py-2 rounded-lg font-medium transition-colors"
+          className="text-white px-4 py-2 rounded-lg font-medium transition-colors"
+          style={{ backgroundColor: '#ef863d' }}
+          onMouseEnter={(e) => e.currentTarget.style.backgroundColor = '#f49030'}
+          onMouseLeave={(e) => e.currentTarget.style.backgroundColor = '#ef863d'}
         >
           📋 Adicionar Por Lista
         </button>
@@ -165,7 +171,8 @@ export default function JogadoresManager({
                 id="cabecaChave"
                 checked={formData.cabecaChave}
                 onChange={(e) => setFormData({ ...formData, cabecaChave: e.target.checked })}
-                className="h-4 w-4 text-primary-orange focus:ring-primary-orange border-gray-300 rounded"
+                className="h-4 w-4 border-gray-300 rounded"
+                style={{ accentColor: '#ef863d' }}
               />
               <label htmlFor="cabecaChave" className="ml-2 text-sm text-primary-dark">
                 Cabeça de Chave
@@ -174,7 +181,10 @@ export default function JogadoresManager({
             <div className="flex gap-3">
               <button
                 type="submit"
-                className="bg-primary-orange hover:bg-primary-light text-primary-dark px-4 py-2 rounded-lg font-medium transition-colors"
+                className="text-white px-4 py-2 rounded-lg font-medium transition-colors"
+                style={{ backgroundColor: '#ef863d' }}
+                onMouseEnter={(e) => e.currentTarget.style.backgroundColor = '#f49030'}
+                onMouseLeave={(e) => e.currentTarget.style.backgroundColor = '#ef863d'}
               >
                 {editingJogador ? 'Salvar' : 'Adicionar'}
               </button>
@@ -233,7 +243,10 @@ export default function JogadoresManager({
                   <div className="flex space-x-2">
                     <button
                       onClick={() => handleEdit(jogador)}
-                      className="text-primary-orange hover:text-primary-light transition-colors p-1"
+                      className="transition-colors p-1"
+                      style={{ color: '#ef863d' }}
+                      onMouseEnter={(e) => e.currentTarget.style.color = '#f49030'}
+                      onMouseLeave={(e) => e.currentTarget.style.color = '#ef863d'}
                       title="Editar jogador"
                     >
                       ✏️
