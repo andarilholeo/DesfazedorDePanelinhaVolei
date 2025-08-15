@@ -11,7 +11,7 @@
   "lang": "pt-BR",
   "icons": [
     {
-      "src": "/icon.svg",
+      "src": "/app_icon.svg",
       "sizes": "192x192 512x512",
       "type": "image/svg+xml",
       "purpose": "maskable any"

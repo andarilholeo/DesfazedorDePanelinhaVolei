@@ -23,10 +23,12 @@ export const metadata: Metadata = {
   },
   icons: {
     icon: [
+      { url: "/app_icon.svg", sizes: "any", type: "image/svg+xml" },
       { url: "/icon-192x192.png", sizes: "192x192", type: "image/png" },
       { url: "/icon-512x512.png", sizes: "512x512", type: "image/png" },
     ],
     apple: [
+      { url: "/app_icon.svg", sizes: "any", type: "image/svg+xml" },
       { url: "/icon-192x192.png", sizes: "192x192", type: "image/png" },
     ],
   },
@@ -51,7 +53,8 @@ export default function RootLayout({
         <meta name="apple-mobile-web-app-capable" content="yes" />
         <meta name="apple-mobile-web-app-status-bar-style" content="default" />
         <meta name="apple-mobile-web-app-title" content="Sorteio Vôlei" />
-        <link rel="apple-touch-icon" href="/icon-192x192.png" />
+        <link rel="apple-touch-icon" href="/app_icon.svg" />
+        <link rel="icon" href="/app_icon.svg" type="image/svg+xml" />
       </head>
       <body
         className={`${geistSans.variable} ${geistMono.variable} antialiased bg-primary-cream text-primary-dark`}

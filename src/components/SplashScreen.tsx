@@ -36,7 +36,7 @@ export default function SplashScreen({ onComplete }: SplashScreenProps) {
         </h1>
 
         <p className="text-xl text-white/90 mb-8 drop-shadow">
-          Sorteador de times inteligente
+          Sorteador de times (não tão) inteligente
         </p>
 
         <div className="flex justify-center space-x-2">
