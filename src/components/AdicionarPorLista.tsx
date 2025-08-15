@@ -95,10 +95,10 @@ export default function AdicionarPorLista({ isOpen, onClose, onAdicionarJogadore
   if (!isOpen) return null;
 
   return (
-    <div className="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50 p-4">
-      <div className="bg-white rounded-lg shadow-xl max-w-4xl w-full max-h-[90vh] overflow-hidden">
-        <div className="bg-primary-orange text-white p-4 flex justify-between items-center">
-          <h2 className="text-xl font-semibold">Adicionar Jogadores por Lista</h2>
+    <div className="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50 p-2 sm:p-4">
+      <div className="bg-white rounded-lg shadow-xl w-full max-w-sm sm:max-w-2xl lg:max-w-4xl max-h-[95vh] sm:max-h-[90vh] overflow-hidden">
+        <div className="bg-primary-orange text-white p-3 sm:p-4 flex justify-between items-center">
+          <h2 className="text-lg sm:text-xl font-semibold">Adicionar Jogadores por Lista</h2>
           <button
             onClick={handleClose}
             className="text-white hover:text-gray-200 text-2xl"
@@ -107,7 +107,7 @@ export default function AdicionarPorLista({ isOpen, onClose, onAdicionarJogadore
           </button>
         </div>
 
-        <div className="p-6 overflow-y-auto max-h-[calc(90vh-120px)]">
+        <div className="p-3 sm:p-6 overflow-y-auto max-h-[calc(95vh-100px)] sm:max-h-[calc(90vh-120px)]">
           {!mostrarPreview ? (
             <div className="space-y-4">
               <div>
@@ -121,17 +121,17 @@ export default function AdicionarPorLista({ isOpen, onClose, onAdicionarJogadore
                 />
               </div>
 
-              <div className="flex gap-3">
+              <div className="flex flex-col sm:flex-row gap-2 sm:gap-3">
                 <button
                   onClick={processarLista}
                   disabled={!texto.trim()}
-                  className="bg-[#ef863d] hover:bg-primary-light disabled:bg-gray-400 text-white px-6 py-2 rounded-lg font-medium transition-colors"
+                  className="bg-[#ef863d] hover:bg-primary-light disabled:bg-gray-400 text-white px-4 sm:px-6 py-2 rounded-lg font-medium transition-colors text-sm sm:text-base"
                 >
                   Processar Lista
                 </button>
                 <button
                   onClick={handleClose}
-                  className="bg-gray-500 hover:bg-gray-600 text-white px-6 py-2 rounded-lg font-medium transition-colors"
+                  className="bg-gray-500 hover:bg-gray-600 text-white px-4 sm:px-6 py-2 rounded-lg font-medium transition-colors text-sm sm:text-base"
                 >
                   Cancelar
                 </button>
@@ -150,66 +150,124 @@ export default function AdicionarPorLista({ isOpen, onClose, onAdicionarJogadore
 
               <div className="space-y-3 max-h-96 overflow-y-auto">
                 {jogadoresProcessados.map((jogador, index) => (
-                  <div key={index} className="bg-gray-50 rounded-lg p-4 flex items-center gap-4">
-                    <div className="flex-1">
-                      <input
-                        type="text"
-                        value={jogador.nome}
-                        onChange={(e) => editarJogador(index, 'nome', e.target.value)}
-                        className="w-full px-3 py-2 border border-gray-300 rounded focus:ring-2 focus:ring-primary-orange focus:border-transparent"
-                        placeholder="Nome do jogador"
-                      />
+                  <div key={index} className="bg-gray-50 rounded-lg p-3 sm:p-4">
+                    {/* Layout Mobile: Vertical */}
+                    <div className="flex flex-col space-y-3 sm:hidden">
+                      <div className="flex items-center justify-between">
+                        <span className="text-sm font-medium text-gray-600">#{index + 1}</span>
+                        <button
+                          onClick={() => removerJogador(index)}
+                          className="text-red-500 hover:text-red-600 p-1"
+                          title="Remover jogador"
+                        >
+                          🗑️
+                        </button>
+                      </div>
+
+                      <div>
+                        <label className="block text-xs font-medium text-gray-600 mb-1">Nome</label>
+                        <input
+                          type="text"
+                          value={jogador.nome}
+                          onChange={(e) => editarJogador(index, 'nome', e.target.value)}
+                          className="w-full px-3 py-2 border border-gray-300 rounded focus:ring-2 focus:ring-primary-orange focus:border-transparent text-sm"
+                          placeholder="Nome do jogador"
+                        />
+                      </div>
+
+                      <div className="grid grid-cols-2 gap-3">
+                        <div>
+                          <label className="block text-xs font-medium text-gray-600 mb-1">Sexo</label>
+                          <select
+                            value={jogador.sexo}
+                            onChange={(e) => editarJogador(index, 'sexo', e.target.value as 'M' | 'F')}
+                            className="w-full px-3 py-2 border border-gray-300 rounded focus:ring-2 focus:ring-primary-orange focus:border-transparent text-sm"
+                          >
+                            <option value="M">Masculino</option>
+                            <option value="F">Feminino</option>
+                          </select>
+                        </div>
+
+                        <div>
+                          <label className="block text-xs font-medium text-gray-600 mb-1">Cabeça de Chave</label>
+                          <div className="flex items-center h-10">
+                            <input
+                              type="checkbox"
+                              id={`cabeca-mobile-${index}`}
+                              checked={jogador.cabecaChave}
+                              onChange={(e) => editarJogador(index, 'cabecaChave', e.target.checked)}
+                              className="h-4 w-4 text-primary-orange focus:ring-primary-orange border-gray-300 rounded"
+                            />
+                            <label htmlFor={`cabeca-mobile-${index}`} className="ml-2 text-sm text-primary-dark">
+                              Sim
+                            </label>
+                          </div>
+                        </div>
+                      </div>
                     </div>
-                    <div>
-                      <select
-                        value={jogador.sexo}
-                        onChange={(e) => editarJogador(index, 'sexo', e.target.value as 'M' | 'F')}
-                        className="px-3 py-2 border border-gray-300 rounded focus:ring-2 focus:ring-primary-orange focus:border-transparent"
+
+                    {/* Layout Desktop: Horizontal */}
+                    <div className="hidden sm:flex items-center gap-4">
+                      <div className="flex-1">
+                        <input
+                          type="text"
+                          value={jogador.nome}
+                          onChange={(e) => editarJogador(index, 'nome', e.target.value)}
+                          className="w-full px-3 py-2 border border-gray-300 rounded focus:ring-2 focus:ring-primary-orange focus:border-transparent"
+                          placeholder="Nome do jogador"
+                        />
+                      </div>
+                      <div>
+                        <select
+                          value={jogador.sexo}
+                          onChange={(e) => editarJogador(index, 'sexo', e.target.value as 'M' | 'F')}
+                          className="px-3 py-2 border border-gray-300 rounded focus:ring-2 focus:ring-primary-orange focus:border-transparent"
+                        >
+                          <option value="M">Masculino</option>
+                          <option value="F">Feminino</option>
+                        </select>
+                      </div>
+                      <div className="flex items-center">
+                        <input
+                          type="checkbox"
+                          id={`cabeca-${index}`}
+                          checked={jogador.cabecaChave}
+                          onChange={(e) => editarJogador(index, 'cabecaChave', e.target.checked)}
+                          className="h-4 w-4 text-primary-orange focus:ring-primary-orange border-gray-300 rounded"
+                        />
+                        <label htmlFor={`cabeca-${index}`} className="ml-2 text-sm text-primary-dark">
+                          Cabeça de Chave
+                        </label>
+                      </div>
+                      <button
+                        onClick={() => removerJogador(index)}
+                        className="text-red-500 hover:text-red-600 p-1"
+                        title="Remover jogador"
                       >
-                        <option value="M">Masculino</option>
-                        <option value="F">Feminino</option>
-                      </select>
+                        🗑️
+                      </button>
                     </div>
-                    <div className="flex items-center">
-                      <input
-                        type="checkbox"
-                        id={`cabeca-${index}`}
-                        checked={jogador.cabecaChave}
-                        onChange={(e) => editarJogador(index, 'cabecaChave', e.target.checked)}
-                        className="h-4 w-4 text-primary-orange focus:ring-primary-orange border-gray-300 rounded"
-                      />
-                      <label htmlFor={`cabeca-${index}`} className="ml-2 text-sm text-primary-dark">
-                        Cabeça de Chave
-                      </label>
-                    </div>
-                    <button
-                      onClick={() => removerJogador(index)}
-                      className="text-red-500 hover:text-red-600 p-1"
-                      title="Remover jogador"
-                    >
-                      🗑️
-                    </button>
                   </div>
                 ))}
               </div>
 
-              <div className="flex gap-3">
+              <div className="flex flex-col sm:flex-row gap-2 sm:gap-3">
                 <button
                   onClick={confirmarAdicao}
                   disabled={jogadoresProcessados.length === 0}
-                  className="bg-[#ef863d] disabled:bg-gray-400 text-white px-6 py-2 rounded-lg font-medium transition-colors"
+                  className="bg-[#ef863d] disabled:bg-gray-400 text-white px-4 sm:px-6 py-2 rounded-lg font-medium transition-colors text-sm sm:text-base"
                 >
                   Adicionar {jogadoresProcessados.length} Jogadores
                 </button>
                 <button
                   onClick={() => setMostrarPreview(false)}
-                  className="bg-gray-500 hover:bg-gray-600 text-white px-6 py-2 rounded-lg font-medium transition-colors"
+                  className="bg-gray-500 hover:bg-gray-600 text-white px-4 sm:px-6 py-2 rounded-lg font-medium transition-colors text-sm sm:text-base"
                 >
                   Voltar
                 </button>
                 <button
                   onClick={handleClose}
-                  className="bg-red-500 hover:bg-red-600 text-white px-6 py-2 rounded-lg font-medium transition-colors"
+                  className="bg-red-500 hover:bg-red-600 text-white px-4 sm:px-6 py-2 rounded-lg font-medium transition-colors text-sm sm:text-base"
                 >
                   Cancelar
                 </button>
