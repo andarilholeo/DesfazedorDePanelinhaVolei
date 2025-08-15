@@ -2,6 +2,7 @@
 
 import { useState } from 'react';
 import { Jogador } from '@/types';
+import AdicionarPorLista from './AdicionarPorLista';
 
 interface JogadoresManagerProps {
   jogadores: Jogador[];
@@ -26,6 +27,7 @@ export default function JogadoresManager({
   estatisticas,
 }: JogadoresManagerProps) {
   const [showForm, setShowForm] = useState(false);
+  const [showListModal, setShowListModal] = useState(false);
   const [editingJogador, setEditingJogador] = useState<Jogador | null>(null);
   const [formData, setFormData] = useState({
     nome: '',
@@ -73,6 +75,12 @@ export default function JogadoresManager({
     }
   };
 
+  const handleAdicionarPorLista = (novosJogadores: Omit<Jogador, 'id'>[]) => {
+    novosJogadores.forEach(jogador => {
+      onAdicionarJogador(jogador);
+    });
+  };
+
   return (
     <div className="space-y-6">
       {/* Estatísticas */}
@@ -101,6 +109,12 @@ export default function JogadoresManager({
           className="bg-primary-orange hover:bg-primary-light text-white px-4 py-2 rounded-lg font-medium transition-colors"
         >
           + Adicionar Jogador
+        </button>
+        <button
+          onClick={() => setShowListModal(true)}
+          className="bg-blue-600 hover:bg-blue-700 text-white px-4 py-2 rounded-lg font-medium transition-colors"
+        >
+          📋 Adicionar Por Lista
         </button>
         {jogadores.length > 0 && (
           <button
@@ -238,6 +252,13 @@ export default function JogadoresManager({
           )}
         </div>
       </div>
+
+      {/* Modal Adicionar Por Lista */}
+      <AdicionarPorLista
+        isOpen={showListModal}
+        onClose={() => setShowListModal(false)}
+        onAdicionarJogadores={handleAdicionarPorLista}
+      />
     </div>
   );
 }
