@@ -102,10 +102,10 @@ export default function JogadoresManager({
         </div>
       </div>
 
-      <div className="flex flex-wrap gap-3">
+      <div className="flex flex-col sm:flex-row gap-3">
         <button
           onClick={() => setShowForm(true)}
-          className="text-white px-4 py-2 rounded-lg font-medium transition-colors"
+          className="w-full sm:w-auto text-white px-4 py-2 rounded-lg font-medium transition-colors"
           style={{ backgroundColor: '#ef863d' }}
           onMouseEnter={(e) => e.currentTarget.style.backgroundColor = '#f49030'}
           onMouseLeave={(e) => e.currentTarget.style.backgroundColor = '#ef863d'}
@@ -114,7 +114,7 @@ export default function JogadoresManager({
         </button>
         <button
           onClick={() => setShowListModal(true)}
-          className="text-white px-4 py-2 rounded-lg font-medium transition-colors"
+          className="w-full sm:w-auto text-white px-4 py-2 rounded-lg font-medium transition-colors"
           style={{ backgroundColor: '#ef863d' }}
           onMouseEnter={(e) => e.currentTarget.style.backgroundColor = '#f49030'}
           onMouseLeave={(e) => e.currentTarget.style.backgroundColor = '#ef863d'}
@@ -124,7 +124,7 @@ export default function JogadoresManager({
         {jogadores.length > 0 && (
           <button
             onClick={handleClearAll}
-            className="bg-red-500 hover:bg-red-600 text-white px-4 py-2 rounded-lg font-medium transition-colors"
+            className="w-full sm:w-auto bg-red-500 hover:bg-red-600 text-white px-4 py-2 rounded-lg font-medium transition-colors"
           >
             Limpar Todos
           </button>

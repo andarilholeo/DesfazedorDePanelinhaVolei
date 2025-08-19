@@ -151,7 +151,6 @@ export default function AdicionarPorLista({ isOpen, onClose, onAdicionarJogadore
               <div className="space-y-3 max-h-96 overflow-y-auto">
                 {jogadoresProcessados.map((jogador, index) => (
                   <div key={index} className="bg-gray-50 rounded-lg p-3 sm:p-4">
-                    {/* Layout Mobile: Vertical */}
                     <div className="flex flex-col space-y-3 sm:hidden">
                       <div className="flex items-center justify-between">
                         <span className="text-sm font-medium text-gray-600">#{index + 1}</span>
@@ -206,7 +205,6 @@ export default function AdicionarPorLista({ isOpen, onClose, onAdicionarJogadore
                       </div>
                     </div>
 
-                    {/* Layout Desktop: Horizontal */}
                     <div className="hidden sm:flex items-center gap-4">
                       <div className="flex-1">
                         <input
