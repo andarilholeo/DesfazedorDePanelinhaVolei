@@ -3,12 +3,14 @@
 import { useState } from 'react';
 import { Jogador, ResultadoSorteio } from '@/types';
 import { sortearTimes, validarSorteio } from '@/lib/sorteio';
+import { ConfiguracoesSorteio } from '@/hooks/useConfiguracoes';
 
 interface SorteadorInterfaceProps {
   jogadores: Jogador[];
+  configuracoes: ConfiguracoesSorteio;
 }
 
-export default function SorteadorInterface({ jogadores }: SorteadorInterfaceProps) {
+export default function SorteadorInterface({ jogadores, configuracoes }: SorteadorInterfaceProps) {
   const [jogadoresPorTime, setJogadoresPorTime] = useState(6);
   const [resultado, setResultado] = useState<ResultadoSorteio | null>(null);
   const [erro, setErro] = useState<string>('');
@@ -22,6 +24,7 @@ export default function SorteadorInterface({ jogadores }: SorteadorInterfaceProp
       const config = {
         jogadoresPorTime,
         jogadoresDisponiveis: jogadores,
+        configuracoes,
       };
 
       const validacao = validarSorteio(config);
@@ -32,7 +35,7 @@ export default function SorteadorInterface({ jogadores }: SorteadorInterfaceProp
 
       // Simular um pequeno delay para melhor UX
       await new Promise(resolve => setTimeout(resolve, 500));
-      
+
       const novoResultado = sortearTimes(config);
       setResultado(novoResultado);
     } catch (error) {
@@ -93,9 +96,20 @@ export default function SorteadorInterface({ jogadores }: SorteadorInterfaceProp
               onChange={(e) => setJogadoresPorTime(parseInt(e.target.value) || 2)}
               className="w-full md:w-32 px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-primary-orange focus:border-transparent"
             />
-            <p className="text-sm text-primary-dark/60 mt-1">
-              Cada time terá exatamente 1 cabeça de chave e 1 mulher
-            </p>
+            <div className="text-sm text-primary-dark/60 mt-1">
+              <p>Regras ativas:</p>
+              <ul className="list-disc list-inside mt-1 space-y-1">
+                {configuracoes.exigirCabecaChavePorTime && (
+                  <li>1 cabeça de chave por time</li>
+                )}
+                {configuracoes.exigirMulherPorTime && (
+                  <li>1 mulher por time</li>
+                )}
+                {!configuracoes.exigirCabecaChavePorTime && !configuracoes.exigirMulherPorTime && (
+                  <li>Sorteio completamente aleatório</li>
+                )}
+              </ul>
+            </div>
           </div>
 
           {/* Botão de Sortear */}

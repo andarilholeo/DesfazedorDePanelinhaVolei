@@ -12,7 +12,11 @@ function embaralhar<T>(array: T[]): T[] {
 
 // Função principal de sorteio
 export function sortearTimes(config: ConfigSorteio): ResultadoSorteio {
-  const { jogadoresPorTime, jogadoresDisponiveis } = config;
+  const { jogadoresPorTime, jogadoresDisponiveis, configuracoes } = config;
+
+  // Configurações padrão se não fornecidas
+  const exigirMulherPorTime = configuracoes?.exigirMulherPorTime ?? true;
+  const exigirCabecaChavePorTime = configuracoes?.exigirCabecaChavePorTime ?? true;
   
   // Validações
   if (jogadoresPorTime < 2) {
@@ -23,14 +27,36 @@ export function sortearTimes(config: ConfigSorteio): ResultadoSorteio {
   const mulheres = jogadoresDisponiveis.filter(j => j.sexo === 'F');
   const outrosJogadores = jogadoresDisponiveis.filter(j => !j.cabecaChave && j.sexo === 'M');
 
-  // Calcular quantos times podem ser formados
-  const maxTimesPorCabecas = cabecasChave.length;
-  const maxTimesPorMulheres = mulheres.length;
-  const maxTimes = Math.min(maxTimesPorCabecas, maxTimesPorMulheres);
+  // Calcular quantos times podem ser formados baseado nas configurações
+  let maxTimes = Math.floor(jogadoresDisponiveis.length / jogadoresPorTime);
 
-  if (maxTimes === 0) {
-    throw new Error('É necessário pelo menos 1 cabeça de chave e 1 mulher para formar times');
+  if (exigirCabecaChavePorTime && exigirMulherPorTime) {
+    // Ambas as regras ativas: limitado por cabeças de chave E mulheres
+    const maxTimesPorCabecas = cabecasChave.length;
+    const maxTimesPorMulheres = mulheres.length;
+    maxTimes = Math.min(maxTimes, maxTimesPorCabecas, maxTimesPorMulheres);
+
+    if (maxTimes === 0) {
+      throw new Error('É necessário pelo menos 1 cabeça de chave e 1 mulher para formar times');
+    }
+  } else if (exigirCabecaChavePorTime) {
+    // Apenas regra de cabeça de chave ativa
+    const maxTimesPorCabecas = cabecasChave.length;
+    maxTimes = Math.min(maxTimes, maxTimesPorCabecas);
+
+    if (maxTimes === 0) {
+      throw new Error('É necessário pelo menos 1 cabeça de chave para formar times');
+    }
+  } else if (exigirMulherPorTime) {
+    // Apenas regra de mulher ativa
+    const maxTimesPorMulheres = mulheres.length;
+    maxTimes = Math.min(maxTimes, maxTimesPorMulheres);
+
+    if (maxTimes === 0) {
+      throw new Error('É necessário pelo menos 1 mulher para formar times');
+    }
   }
+  // Se nenhuma regra estiver ativa, maxTimes já está calculado apenas pelo total de jogadores
 
   // Verificar se há jogadores suficientes
   const jogadoresNecessarios = maxTimes * jogadoresPorTime;
@@ -48,18 +74,27 @@ export function sortearTimes(config: ConfigSorteio): ResultadoSorteio {
   const jogadoresUsados = new Set<string>();
 
   for (let i = 0; i < maxTimes; i++) {
-    const cabeca = cabecasEmbaralhadas[i];
-    const mulher = mulheresEmbaralhadas[i];
-    
     const time: Time = {
       id: `time-${i + 1}`,
-      jogadores: [cabeca, mulher],
-      cabecaChave: cabeca,
-      mulher: mulher,
+      jogadores: [],
     };
 
-    jogadoresUsados.add(cabeca.id);
-    jogadoresUsados.add(mulher.id);
+    // Adicionar cabeça de chave se a regra estiver ativa
+    if (exigirCabecaChavePorTime && i < cabecasEmbaralhadas.length) {
+      const cabeca = cabecasEmbaralhadas[i];
+      time.jogadores.push(cabeca);
+      time.cabecaChave = cabeca;
+      jogadoresUsados.add(cabeca.id);
+    }
+
+    // Adicionar mulher se a regra estiver ativa
+    if (exigirMulherPorTime && i < mulheresEmbaralhadas.length) {
+      const mulher = mulheresEmbaralhadas[i];
+      time.jogadores.push(mulher);
+      time.mulher = mulher;
+      jogadoresUsados.add(mulher.id);
+    }
+
     times.push(time);
   }
 
@@ -95,31 +130,50 @@ export function sortearTimes(config: ConfigSorteio): ResultadoSorteio {
 
 // Função para validar se é possível fazer o sorteio
 export function validarSorteio(config: ConfigSorteio): { valido: boolean; erro?: string } {
-  const { jogadoresPorTime, jogadoresDisponiveis } = config;
+  const { jogadoresPorTime, jogadoresDisponiveis, configuracoes } = config;
 
   if (jogadoresPorTime < 2) {
     return { valido: false, erro: 'Cada time deve ter pelo menos 2 jogadores' };
   }
 
+  // Configurações padrão se não fornecidas
+  const exigirMulherPorTime = configuracoes?.exigirMulherPorTime ?? true;
+  const exigirCabecaChavePorTime = configuracoes?.exigirCabecaChavePorTime ?? true;
+
   const cabecasChave = jogadoresDisponiveis.filter(j => j.cabecaChave);
   const mulheres = jogadoresDisponiveis.filter(j => j.sexo === 'F');
 
-  if (cabecasChave.length === 0) {
-    return { valido: false, erro: 'É necessário pelo menos 1 cabeça de chave' };
+  // Validações baseadas nas configurações
+  if (exigirCabecaChavePorTime && cabecasChave.length === 0) {
+    return { valido: false, erro: 'É necessário pelo menos 1 cabeça de chave (configuração ativa)' };
   }
 
-  if (mulheres.length === 0) {
-    return { valido: false, erro: 'É necessário pelo menos 1 mulher' };
+  if (exigirMulherPorTime && mulheres.length === 0) {
+    return { valido: false, erro: 'É necessário pelo menos 1 mulher (configuração ativa)' };
   }
 
-  const maxTimes = Math.min(cabecasChave.length, mulheres.length);
+  // Calcular máximo de times possível
+  let maxTimes = Math.floor(jogadoresDisponiveis.length / jogadoresPorTime);
+
+  if (exigirCabecaChavePorTime && exigirMulherPorTime) {
+    maxTimes = Math.min(maxTimes, cabecasChave.length, mulheres.length);
+  } else if (exigirCabecaChavePorTime) {
+    maxTimes = Math.min(maxTimes, cabecasChave.length);
+  } else if (exigirMulherPorTime) {
+    maxTimes = Math.min(maxTimes, mulheres.length);
+  }
+
   const jogadoresNecessarios = maxTimes * jogadoresPorTime;
 
   if (jogadoresDisponiveis.length < jogadoresNecessarios) {
-    return { 
-      valido: false, 
-      erro: `Não há jogadores suficientes. Necessário: ${jogadoresNecessarios}, Disponível: ${jogadoresDisponiveis.length}` 
+    return {
+      valido: false,
+      erro: `Não há jogadores suficientes. Necessário: ${jogadoresNecessarios}, Disponível: ${jogadoresDisponiveis.length}`
     };
+  }
+
+  if (maxTimes === 0) {
+    return { valido: false, erro: 'Não é possível formar nenhum time com as configurações atuais' };
   }
 
   return { valido: true };

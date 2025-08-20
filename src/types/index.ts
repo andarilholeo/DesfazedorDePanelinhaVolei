@@ -15,6 +15,10 @@ export interface Time {
 export interface ConfigSorteio {
   jogadoresPorTime: number;
   jogadoresDisponiveis: Jogador[];
+  configuracoes?: {
+    exigirMulherPorTime: boolean;
+    exigirCabecaChavePorTime: boolean;
+  };
 }
 
 export interface ResultadoSorteio {

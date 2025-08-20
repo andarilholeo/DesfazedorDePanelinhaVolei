@@ -2,14 +2,17 @@
 
 import { useState } from 'react';
 import { useJogadores } from '@/hooks/useJogadores';
+import { useConfiguracoes } from '@/hooks/useConfiguracoes';
 import JogadoresManager from './JogadoresManager';
 import SorteadorInterface from './SorteadorInterface';
+import Configuracoes from './Configuracoes';
 
-type TabType = 'jogadores' | 'sorteio';
+type TabType = 'jogadores' | 'sorteio' | 'configuracoes';
 
 export default function MainApp() {
   const [activeTab, setActiveTab] = useState<TabType>('jogadores');
   const { jogadores, isLoading, adicionarJogador, editarJogador, removerJogador, limparJogadores, estatisticas } = useJogadores();
+  const { configuracoes } = useConfiguracoes();
 
   if (isLoading) {
     return (
@@ -61,6 +64,16 @@ export default function MainApp() {
             >
               Sorteio
             </button>
+            <button
+              onClick={() => setActiveTab('configuracoes')}
+              className={`py-4 px-2 border-b-2 font-medium text-sm transition-colors ${
+                activeTab === 'configuracoes'
+                  ? 'border-primary-orange text-primary-orange'
+                  : 'border-transparent text-primary-dark hover:text-primary-orange hover:border-primary-light'
+              }`}
+            >
+              Configurações
+            </button>
           </div>
         </div>
       </nav>
@@ -78,7 +91,11 @@ export default function MainApp() {
         )}
         
         {activeTab === 'sorteio' && (
-          <SorteadorInterface jogadores={jogadores} />
+          <SorteadorInterface jogadores={jogadores} configuracoes={configuracoes} />
+        )}
+
+        {activeTab === 'configuracoes' && (
+          <Configuracoes />
         )}
       </main>
 
